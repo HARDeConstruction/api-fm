@@ -1,214 +1,23 @@
 openapi: 3.0.0
-servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/DUCLNC2004/FounderMatching/1.0.0
 info:
-  version: "1.0.0"
   title: founder-matching-api
+  version: "1.0.0"
   description: The API for the FounderMatching project by HarDeconstruction
 
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/DUCLNC2004/FounderMatching/1.0.0
 
-paths:
-  /users/me:
-    get:
-      tags:
-        - Profile
-      summary: Get the current user's profile
-      description: Fetch the profile details of the logged-in user, including basic and candidate-specific information.
-      operationId: getUserProfile
-      responses:
-        '200':
-          description: User profile details.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  UserAccount:
-                    $ref: '#/components/schemas/UserAccount'
-                  CandidateProfile:
-                    $ref: '#/components/schemas/CandidateProfile'
-                  PrivacySettings:
-                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
-
-    post:
-      tags:
-        - Profile
-      summary: Create a new user profile
-      description: Create a profile for the logged-in user, including both basic and candidate-specific information.
-      operationId: createUserProfile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                UserAccount:
-                  $ref: '#/components/schemas/UserAccount'
-                CandidateProfile:
-                  $ref: '#/components/schemas/CandidateProfile'
-                PrivacySettings:
-                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
-      responses:
-        '201':
-          description: Profile created successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  UserAccount:
-                    $ref: '#/components/schemas/UserAccount'
-                  CandidateProfile:
-                    $ref: '#/components/schemas/CandidateProfile'
-                  PrivacySettings:
-                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
-
-    patch:
-      tags:
-        - Profile
-      summary: Update the current user's profile
-      description: Update profile information for the logged-in user, including both basic and candidate-specific information.
-      operationId: updateUserProfile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                UserAccount:
-                  $ref: '#/components/schemas/UserAccount'
-                CandidateProfile:
-                  $ref: '#/components/schemas/CandidateProfile'
-                PrivacySettings:
-                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
-      responses:
-        '200':
-          description: Profile updated successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  UserAccount:
-                    $ref: '#/components/schemas/UserAccount'
-                  CandidateProfile:
-                    $ref: '#/components/schemas/CandidateProfile'
-                  PrivacySettings:
-                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
-
-
-  /startups/me:
-    get:
-      tags:
-        - Profile
-      summary: Get the startup's profile
-      description: Fetch the profile details of the logged-in startup user.
-      operationId: getStartupProfile
-      responses:
-        '200':
-          description: Startup profile details.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  StartupProfile:
-                    $ref: '#/components/schemas/StartupProfile'
-                  PrivacySettings:
-                    $ref: '#/components/schemas/StartupProfilePrivacySettings'
-    patch:
-      tags:
-        - Profile
-      summary: Update the startup's profile
-      description: Update profile information for the logged-in startup user.
-      operationId: updateStartupProfile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                StartupProfile:
-                  $ref: '#/components/schemas/StartupProfile'
-                PrivacySettings:
-                  $ref: '#/components/schemas/StartupProfilePrivacySettings'
-      responses:
-        '200':
-          description: Profile updated successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  StartupProfile:
-                    $ref: '#/components/schemas/StartupProfile'
-                    
-  /notifications:
-    get:
-      tags:
-        - Notifications
-      summary: Get all notifications for the current user
-      description: Fetch all notifications for the logged-in user.
-      operationId: getNotifications
-      parameters:
-        - name: page
-          in: query
-          description: Page number for pagination.
-          required: false
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          description: Number of notifications per page.
-          required: false
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: A list of notifications.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Notification'
-
-  /notifications/{id}:
-    patch:
-      tags:
-        - Notifications
-      summary: Mark a notification as read
-      description: Update the read status of a specific notification by ID.
-      operationId: markNotificationAsRead
-      parameters:
-        - name: id
-          in: path
-          description: ID of the notification to update.
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                Read:
-                  type: boolean
-                  example: true
-      responses:
-        '200':
-          description: Notification updated successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Notification'
-
-
+security:
+  - bearerAuth: []
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     # Enums
     GenderType:
@@ -235,154 +44,92 @@ components:
     # Tables
     UserAccount:
       type: object
+      additionalProperties: false
       properties:
         UserID:
           type: integer
+          format: int32
+          minimum: 1
+          maximum: 999999
         ClerkUserID:
           type: string
           format: uuid
         Email:
           type: string
           format: email
+          maxLength: 255
+          pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
         FirstName:
           type: string
+          maxLength: 100
+          pattern: "^[A-Za-z\\s'-]+$"
         LastName:
           type: string
+          maxLength: 100
+          pattern: "^[A-Za-z\\s'-]+$"
         IsCandidate:
           type: boolean
         IsStartup:
           type: boolean
 
-    PhoneNumber:
-      type: object
-      properties:
-        PhoneNumberID:
-          type: integer
-        CountryCode:
-          type: string
-        AreaCode:
-          type: string
-        Number:
-          type: string
-        Privacy:
-          $ref: '#/components/schemas/PrivacyType'
-
-    Countries:
-      type: object
-      properties:
-        num_code:
-          type: integer
-        alpha_2_code:
-          type: string
-        alpha_3_code:
-          type: string
-        en_short_name:
-          type: string
-        nationality:
-          type: string
 
     CandidateProfile:
       type: object
+      additionalProperties: false
       properties:
         CandidateID:
           type: integer
+          format: int32
+          minimum: 1
+          maximum: 999999
         UserID:
           type: integer
+          format: int32
+          minimum: 1
         Industry:
           type: string
+          maxLength: 100
+          pattern: "^[A-Za-z\\s&,-]+$"
         PhoneNumberID:
           type: integer
+          format: int32
+          minimum: 1
         CountryID:
           type: integer
+          format: int32
+          minimum: 1
         City:
           type: string
+          maxLength: 100
+          pattern: "^[A-Za-z\\s'-]+$"
         University:
           type: string
+          maxLength: 100
+          pattern: "^[A-Za-z0-9\\s',.-]+$"
         LinkedInURL:
           type: string
-          format: uri
+          format: url
+          maxLength: 255
         Slogan:
           type: string
+          maxLength: 200
         HobbyInterest:
           type: string
+          maxLength: 500
         Gender:
           $ref: '#/components/schemas/GenderType'
 
-    StartupProfile:
-      type: object
-      properties:
-        StartupID:
-          type: integer
-        UserOwnerID:
-          type: integer
-        Name:
-          type: string
-        Email:
-          type: string
-          format: email
-        Logo:
-          type: string
-        Industry:
-          type: string
-        PhoneNumberID:
-          type: integer
-        CountryID:
-          type: integer
-        City:
-          type: string
-        LinkedInURL:
-          type: string
-          format: uri
-        Slogan:
-          type: string
-        WebsiteLink:
-          type: string
-          format: uri
-        Description:
-          type: string
-        CurrentStage:
-          type: string
-        Achievement:
-          type: string
-
-    StartupProfilePrivacySettings:
-      type: object
-      properties:
-        StartupID:
-          type: integer
-        IndustryPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        PhoneNumberIDPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        CountryIDPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        CityPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        LinkedInURLPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        SloganPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        WebsiteLinkPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        DescriptionPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        CurrentStagePrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        AchievementPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        ViewGraphPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
 
     CandidateProfilePrivacySettings:
       type: object
+      additionalProperties: false
       properties:
         CandidateID:
           type: integer
+          format: int32
+          minimum: 1
+
         IndustryPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        PhoneNumberIDPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        CountryIDPrivacy:
           $ref: '#/components/schemas/PrivacyType'
         CityPrivacy:
           $ref: '#/components/schemas/PrivacyType'
@@ -392,134 +139,298 @@ components:
           $ref: '#/components/schemas/PrivacyType'
         SloganPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-        EducationPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        ExperiencePrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        HobbyInterestPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        ViewGraphPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
 
-    Matching:
+    StartupProfile:
       type: object
+      additionalProperties: false
       properties:
-        ID:
-          type: integer
-        CandidateID:
-          type: integer
         StartupID:
           type: integer
-        CandidateStatus:
-          $ref: '#/components/schemas/MatchStatus'
-        StartupStatus:
-          $ref: '#/components/schemas/MatchStatus'
-        IsMatched:
-          type: boolean
-        MatchDate:
+          minimum: 1
+          maximum: 999999
+        UserOwnerID:
+          type: integer
+          minimum: 1
+        Name:
           type: string
-          format: date-time
+          maxLength: 100
+          pattern: "^[A-Za-z\\s&,-]+$"
+        Email:
+          type: string
+          format: email
+        Logo:
+          type: string
+        Industry:
+          type: string
+          maxLength: 100
+          pattern: "^[A-Za-z\\s&,-]+$"
+        LinkedInURL:
+          type: string
+          format: uri
+        Slogan:
+          type: string
+          maxLength: 200
+        Description:
+          type: string
+          maxLength: 1000
+
+    StartupProfilePrivacySettings:
+      type: object
+      additionalProperties: false
+      properties:
+        StartupID:
+          type: integer
+          format: int32
+          minimum: 1
+        IndustryPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        SloganPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
 
     Notification:
       type: object
+      additionalProperties: false
       properties:
         ID:
           type: integer
+          format: int32
+          minimum: 1
+          maximum: 999999
         Recipient:
           type: integer
+          format: int32
+          minimum: 1
+          maximum: 999999
         Data:
           type: string
+          maxLength: 500
         Read:
           type: boolean
         CreatedDateTime:
           type: string
           format: date-time
-        IsStartupNotified:
-          type: boolean
 
-    Tags:
-      type: object
-      properties:
-        ID:
-          type: integer
-        Value:
-          type: string
-        Description:
-          type: string
+paths:
+  /users/me:
+    get:
+      tags:
+        - Profile
+      summary: Get the current user's profile
+      description: Fetch the profile details of the logged-in user, including basic and candidate-specific information.
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: User profile details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  UserAccount:
+                    $ref: '#/components/schemas/UserAccount'
+                  CandidateProfile:
+                    $ref: '#/components/schemas/CandidateProfile'
+                  PrivacySettings:
+                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+        '404':
+          description: Profile not found
 
-    Experience:
-      type: object
-      properties:
-        ID:
-          type: integer
-        CandidateOwner:
-          type: integer
-        CompanyName:
-          type: string
-        Role:
-          type: string
-        Location:
-          type: string
-        Description:
-          type: string
-        StartDate:
-          type: string
-          format: date-time
-        EndDate:
-          type: string
-          format: date-time
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
 
-    Certificate:
-      type: object
-      properties:
-        ID:
-          type: integer
-        CandidateOwner:
-          type: integer
-        Name:
-          type: string
-        Skill:
-          type: string
-        Description:
-          type: string
-        StartDate:
-          type: string
-          format: date-time
-        EndDate:
-          type: string
-          format: date-time
-        GPA:
-          type: number
-          format: float
+    post:
+      tags:
+        - Profile
+      summary: Create a new user profile
+      description: Create a profile for the logged-in user.
+      operationId: createUserProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                UserAccount:
+                  $ref: '#/components/schemas/UserAccount'
+                CandidateProfile:
+                  $ref: '#/components/schemas/CandidateProfile'
+                PrivacySettings:
+                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+      responses:
+        '200':
+          description: Profile created successfully.
+        '404':
+          description: Profile creation failed.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
 
-    ProfileViews:
-      type: object
-      properties:
-        ViewID:
-          type: integer
-        ViewerID:
-          type: integer
-        ViewedCandidateID:
-          type: integer
-        ViewedStartupID:
-          type: integer
-        ViewedAt:
-          type: string
-          format: date-time
+    patch:
+      tags:
+        - Profile
+      summary: Update the current user's profile
+      description: Update profile information for the logged-in user.
+      operationId: updateUserProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                UserAccount:
+                  $ref: '#/components/schemas/UserAccount'
+                CandidateProfile:
+                  $ref: '#/components/schemas/CandidateProfile'
+                PrivacySettings:
+                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+      responses:
+        '200':
+          description: Profile updated successfully.
+        '404':
+          description: Profile not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
 
-    SavedProfiles:
-      type: object
-      properties:
-        SaveID:
-          type: integer
-        UserID:
-          type: integer
-        SavedCandidateID:
-          type: integer
-        SavedStartupID:
-          type: integer
-        SavedAt:
-          type: string
-          format: date-time
-        Notes:
-          type: string
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get all notifications for the current user
+      description: Fetch all notifications for the logged-in user.
+      operationId: getNotifications
+      responses:
+        '200':
+          description: Notifications fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 50
+                items:
+                  $ref: '#/components/schemas/Notification'
+        '404':
+          description: Notifications not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+
+  /notifications/{id}:
+    patch:
+      tags:
+        - Notifications
+      summary: Mark a notification as read
+      description: Update the read status of a specific notification by ID.
+      operationId: markNotificationAsRead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Read:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Notification updated successfully.
+        '404':
+          description: Notification not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
