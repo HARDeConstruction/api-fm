@@ -1,0 +1,525 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/DUCLNC2004/FounderMatching/1.0.0
+info:
+  version: "1.0.0"
+  title: founder-matching-api
+  description: The API for the FounderMatching project by HarDeconstruction
+
+
+paths:
+  /users/me:
+    get:
+      tags:
+        - Profile
+      summary: Get the current user's profile
+      description: Fetch the profile details of the logged-in user, including basic and candidate-specific information.
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: User profile details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  UserAccount:
+                    $ref: '#/components/schemas/UserAccount'
+                  CandidateProfile:
+                    $ref: '#/components/schemas/CandidateProfile'
+                  PrivacySettings:
+                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+
+    post:
+      tags:
+        - Profile
+      summary: Create a new user profile
+      description: Create a profile for the logged-in user, including both basic and candidate-specific information.
+      operationId: createUserProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                UserAccount:
+                  $ref: '#/components/schemas/UserAccount'
+                CandidateProfile:
+                  $ref: '#/components/schemas/CandidateProfile'
+                PrivacySettings:
+                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+      responses:
+        '201':
+          description: Profile created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  UserAccount:
+                    $ref: '#/components/schemas/UserAccount'
+                  CandidateProfile:
+                    $ref: '#/components/schemas/CandidateProfile'
+                  PrivacySettings:
+                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+
+    patch:
+      tags:
+        - Profile
+      summary: Update the current user's profile
+      description: Update profile information for the logged-in user, including both basic and candidate-specific information.
+      operationId: updateUserProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                UserAccount:
+                  $ref: '#/components/schemas/UserAccount'
+                CandidateProfile:
+                  $ref: '#/components/schemas/CandidateProfile'
+                PrivacySettings:
+                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+      responses:
+        '200':
+          description: Profile updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  UserAccount:
+                    $ref: '#/components/schemas/UserAccount'
+                  CandidateProfile:
+                    $ref: '#/components/schemas/CandidateProfile'
+                  PrivacySettings:
+                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+
+
+  /startups/me:
+    get:
+      tags:
+        - Profile
+      summary: Get the startup's profile
+      description: Fetch the profile details of the logged-in startup user.
+      operationId: getStartupProfile
+      responses:
+        '200':
+          description: Startup profile details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  StartupProfile:
+                    $ref: '#/components/schemas/StartupProfile'
+                  PrivacySettings:
+                    $ref: '#/components/schemas/StartupProfilePrivacySettings'
+    patch:
+      tags:
+        - Profile
+      summary: Update the startup's profile
+      description: Update profile information for the logged-in startup user.
+      operationId: updateStartupProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                StartupProfile:
+                  $ref: '#/components/schemas/StartupProfile'
+                PrivacySettings:
+                  $ref: '#/components/schemas/StartupProfilePrivacySettings'
+      responses:
+        '200':
+          description: Profile updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  StartupProfile:
+                    $ref: '#/components/schemas/StartupProfile'
+                    
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get all notifications for the current user
+      description: Fetch all notifications for the logged-in user.
+      operationId: getNotifications
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination.
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of notifications per page.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of notifications.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+
+  /notifications/{id}:
+    patch:
+      tags:
+        - Notifications
+      summary: Mark a notification as read
+      description: Update the read status of a specific notification by ID.
+      operationId: markNotificationAsRead
+      parameters:
+        - name: id
+          in: path
+          description: ID of the notification to update.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Read:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Notification updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+
+
+
+components:
+  schemas:
+    # Enums
+    GenderType:
+      type: string
+      enum:
+        - male
+        - female
+        - other
+
+    PrivacyType:
+      type: string
+      enum:
+        - public
+        - private
+        - connections
+
+    MatchStatus:
+      type: string
+      enum:
+        - pending
+        - accepted
+        - rejected
+
+    # Tables
+    UserAccount:
+      type: object
+      properties:
+        UserID:
+          type: integer
+        ClerkUserID:
+          type: string
+          format: uuid
+        Email:
+          type: string
+          format: email
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        IsCandidate:
+          type: boolean
+        IsStartup:
+          type: boolean
+
+    PhoneNumber:
+      type: object
+      properties:
+        PhoneNumberID:
+          type: integer
+        CountryCode:
+          type: string
+        AreaCode:
+          type: string
+        Number:
+          type: string
+        Privacy:
+          $ref: '#/components/schemas/PrivacyType'
+
+    Countries:
+      type: object
+      properties:
+        num_code:
+          type: integer
+        alpha_2_code:
+          type: string
+        alpha_3_code:
+          type: string
+        en_short_name:
+          type: string
+        nationality:
+          type: string
+
+    CandidateProfile:
+      type: object
+      properties:
+        CandidateID:
+          type: integer
+        UserID:
+          type: integer
+        Industry:
+          type: string
+        PhoneNumberID:
+          type: integer
+        CountryID:
+          type: integer
+        City:
+          type: string
+        University:
+          type: string
+        LinkedInURL:
+          type: string
+          format: uri
+        Slogan:
+          type: string
+        HobbyInterest:
+          type: string
+        Gender:
+          $ref: '#/components/schemas/GenderType'
+
+    StartupProfile:
+      type: object
+      properties:
+        StartupID:
+          type: integer
+        UserOwnerID:
+          type: integer
+        Name:
+          type: string
+        Email:
+          type: string
+          format: email
+        Logo:
+          type: string
+        Industry:
+          type: string
+        PhoneNumberID:
+          type: integer
+        CountryID:
+          type: integer
+        City:
+          type: string
+        LinkedInURL:
+          type: string
+          format: uri
+        Slogan:
+          type: string
+        WebsiteLink:
+          type: string
+          format: uri
+        Description:
+          type: string
+        CurrentStage:
+          type: string
+        Achievement:
+          type: string
+
+    StartupProfilePrivacySettings:
+      type: object
+      properties:
+        StartupID:
+          type: integer
+        IndustryPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        PhoneNumberIDPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CountryIDPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CityPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        LinkedInURLPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        SloganPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        WebsiteLinkPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        DescriptionPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CurrentStagePrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        AchievementPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        ViewGraphPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+
+    CandidateProfilePrivacySettings:
+      type: object
+      properties:
+        CandidateID:
+          type: integer
+        IndustryPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        PhoneNumberIDPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CountryIDPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CityPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        UniversityPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        LinkedInURLPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        SloganPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        EducationPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        ExperiencePrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        HobbyInterestPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        ViewGraphPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+
+    Matching:
+      type: object
+      properties:
+        ID:
+          type: integer
+        CandidateID:
+          type: integer
+        StartupID:
+          type: integer
+        CandidateStatus:
+          $ref: '#/components/schemas/MatchStatus'
+        StartupStatus:
+          $ref: '#/components/schemas/MatchStatus'
+        IsMatched:
+          type: boolean
+        MatchDate:
+          type: string
+          format: date-time
+
+    Notification:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Recipient:
+          type: integer
+        Data:
+          type: string
+        Read:
+          type: boolean
+        CreatedDateTime:
+          type: string
+          format: date-time
+        IsStartupNotified:
+          type: boolean
+
+    Tags:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Value:
+          type: string
+        Description:
+          type: string
+
+    Experience:
+      type: object
+      properties:
+        ID:
+          type: integer
+        CandidateOwner:
+          type: integer
+        CompanyName:
+          type: string
+        Role:
+          type: string
+        Location:
+          type: string
+        Description:
+          type: string
+        StartDate:
+          type: string
+          format: date-time
+        EndDate:
+          type: string
+          format: date-time
+
+    Certificate:
+      type: object
+      properties:
+        ID:
+          type: integer
+        CandidateOwner:
+          type: integer
+        Name:
+          type: string
+        Skill:
+          type: string
+        Description:
+          type: string
+        StartDate:
+          type: string
+          format: date-time
+        EndDate:
+          type: string
+          format: date-time
+        GPA:
+          type: number
+          format: float
+
+    ProfileViews:
+      type: object
+      properties:
+        ViewID:
+          type: integer
+        ViewerID:
+          type: integer
+        ViewedCandidateID:
+          type: integer
+        ViewedStartupID:
+          type: integer
+        ViewedAt:
+          type: string
+          format: date-time
+
+    SavedProfiles:
+      type: object
+      properties:
+        SaveID:
+          type: integer
+        UserID:
+          type: integer
+        SavedCandidateID:
+          type: integer
+        SavedStartupID:
+          type: integer
+        SavedAt:
+          type: string
+          format: date-time
+        Notes:
+          type: string
