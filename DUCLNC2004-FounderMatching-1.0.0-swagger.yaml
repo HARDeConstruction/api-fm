@@ -421,7 +421,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Profile not found."
                     maxLength: 100
@@ -494,7 +494,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Profile creation failed."
                     maxLength: 100
@@ -567,7 +567,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Profile not found."
                     maxLength: 100
@@ -629,7 +629,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Startup profile not found."
                     maxLength: 100
@@ -702,7 +702,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Startup profile creation failed."
                     maxLength: 100
@@ -775,7 +775,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Startup profile not found."
                     maxLength: 100
@@ -833,7 +833,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Notification not found."
                     maxLength: 100
@@ -913,7 +913,7 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  message:
+                  error:
                     type: string
                     example: "Notification not found."
                     maxLength: 100
