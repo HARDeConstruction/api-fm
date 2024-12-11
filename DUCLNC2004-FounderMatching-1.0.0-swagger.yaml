@@ -520,7 +520,7 @@ paths:
                     example: "An unexpected error occurred"
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-
+  
   /notifications:
     get:
       tags:
