@@ -277,6 +277,39 @@ components:
       required:
         - StartupID
 
+    StartupMembership:
+      type: object
+      additionalProperties: false
+      properties:
+        ID:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        StartupID:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        UserID:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        Role:
+          type: string
+          maxLength: 100
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+        Description:
+          type: string
+          maxLength: 2000
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+      required:
+        - ID
+        - StartupID
+        - UserID
+        - Role
+
     Notification:
       type: object
       additionalProperties: false
