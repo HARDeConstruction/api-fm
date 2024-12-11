@@ -1,0 +1,3 @@
+apis:
+  DUCLNC2004-FounderMatching-1.0.0-swagger.yaml:
+    alias: founder-matching-api

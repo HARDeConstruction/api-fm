@@ -178,6 +178,7 @@ components:
           type: integer
           format: int32
           minimum: 1
+          maximum: 999999
         Name:
           type: string
           maxLength: 100
@@ -190,18 +191,22 @@ components:
         Logo:
           type: string
           format: url
-          maxLength: 255
+          maxLength: 2048
+          pattern: "^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp|svg)$"
         Industry:
           type: string
           maxLength: 100
+          pattern: "^[A-Za-z\\s'-]+$"
         PhoneNumberID:
           type: integer
           format: int32
           minimum: 1
+          maximum: 099999999999
         CountryID:
           type: integer
           format: int32
           minimum: 1
+          maximum: 99999999
         City:
           type: string
           maxLength: 100
@@ -210,27 +215,67 @@ components:
           type: string
           format: url
           maxLength: 255
+          pattern: "^https?://(www\\.)?linkedin\\.com/.*$"
         Slogan:
           type: string
           maxLength: 200
+          pattern: "^[A-Za-z0-9]+$"
         WebsiteLink:
           type: string
           format: url
           maxLength: 255
+          pattern: "^https?://.*$"
         Description:
           type: string
-          maxLength: 2000
+          maxLength: 99999
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
         CurrentStage:
           type: string
-          maxLength: 2000
+          maxLength: 200
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
         Achievement:
           type: string
           maxLength: 2000
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
       required:
         - UserOwnerID
         - Name
         - Email
         - Industry
+
+    StartupProfilePrivacySettings:
+      type: object
+      additionalProperties: false
+      properties:
+        StartupID:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 99999999
+        IndustryPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        PhoneNumberIDPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CountryIDPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CityPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        LinkedInURLPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        SloganPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        WebsiteLinkPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        DescriptionPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CurrentStagePrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        AchievementPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        ViewGraphPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+      required:
+        - StartupID
 
     Notification:
       type: object
@@ -521,6 +566,215 @@ paths:
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
   
+  /users/mystartup:
+    get:
+      tags:
+        - Startup
+      summary: Get the current user's startup profile
+      description: Fetch the startup profile details of the logged-in user.
+      operationId: getUserStartupProfile
+      responses:
+        '200':
+          description: Startup profile details.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  UserAccount:
+                    $ref: '#/components/schemas/UserAccount'
+                  StartupProfile:
+                    $ref: '#/components/schemas/StartupProfile'
+                  PrivacySettings:
+                    $ref: '#/components/schemas/StartupProfilePrivacySettings'
+        '404':
+          description: Startup profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Startup profile not found."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+
+    post:
+      tags:
+        - Startup
+      summary: Create a new startup profile
+      description: Create a startup profile for the logged-in user.
+      operationId: createUserStartupProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                UserAccount:
+                  $ref: '#/components/schemas/UserAccount'
+                StartupProfile:
+                  $ref: '#/components/schemas/StartupProfile'
+                PrivacySettings:
+                  $ref: '#/components/schemas/StartupProfilePrivacySettings'
+      responses:
+        '200':
+          description: Startup profile created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Startup profile created successfully."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        '404':
+          description: Startup profile creation failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Startup profile creation failed."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+
+    patch:
+      tags:
+        - Startup
+      summary: Update the current user's startup profile
+      description: Update startup profile information for the logged-in user.
+      operationId: updateUserStartupProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                UserAccount:
+                  $ref: '#/components/schemas/UserAccount'
+                StartupProfile:
+                  $ref: '#/components/schemas/StartupProfile'
+                PrivacySettings:
+                  $ref: '#/components/schemas/StartupProfilePrivacySettings'
+      responses:
+        '200':
+          description: Startup profile updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Startup profile updated successfully."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        '404':
+          description: Startup profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Startup profile not found."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+
+
   /notifications:
     get:
       tags:
