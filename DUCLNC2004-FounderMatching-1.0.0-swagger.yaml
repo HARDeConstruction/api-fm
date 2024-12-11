@@ -17,9 +17,9 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
+      
   schemas:
-    # Enums
+    # ENUMS
     GenderType:
       type: string
       enum:
@@ -41,7 +41,7 @@ components:
         - accepted
         - rejected
 
-    # Tables
+    # TABLE SCHEMAS
     UserAccount:
       type: object
       additionalProperties: false
@@ -50,10 +50,12 @@ components:
           type: integer
           format: int32
           minimum: 1
-          maximum: 999999
+          maximum: 99999999
         ClerkUserID:
           type: string
           format: uuid
+          maxLength: 200
+          pattern: "^[A-Za-z0-9_-]+$"
         Email:
           type: string
           format: email
@@ -71,7 +73,11 @@ components:
           type: boolean
         IsStartup:
           type: boolean
-
+      required:
+        - ClerkUserID
+        - Email
+        - FirstName
+        - LastName
 
     CandidateProfile:
       type: object
@@ -81,11 +87,12 @@ components:
           type: integer
           format: int32
           minimum: 1
-          maximum: 999999
+          maximum: 99999999
         UserID:
           type: integer
           format: int32
           minimum: 1
+          maximum: 99999999
         Industry:
           type: string
           maxLength: 100
@@ -94,10 +101,12 @@ components:
           type: integer
           format: int32
           minimum: 1
+          maximum: 999999999999
         CountryID:
           type: integer
           format: int32
           minimum: 1
+          maximum: 99999999
         City:
           type: string
           maxLength: 100
@@ -110,15 +119,21 @@ components:
           type: string
           format: url
           maxLength: 255
+          pattern: "^https?://(www\\.)?linkedin\\.com/.*$"
         Slogan:
           type: string
-          maxLength: 200
+          maxLength: 300
+          pattern: "^[A-Za-z0-9]+$"
         HobbyInterest:
           type: string
           maxLength: 500
+          pattern: "^[A-Za-z0-9]+$"
         Gender:
           $ref: '#/components/schemas/GenderType'
-
+      required:
+        - UserID
+        - Industry
+        - Gender
 
     CandidateProfilePrivacySettings:
       type: object
@@ -128,8 +143,14 @@ components:
           type: integer
           format: int32
           minimum: 1
-
+          maximum: 99999999
+        GenderPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
         IndustryPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        PhoneNumberIDPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+        CountryIDPrivacy:
           $ref: '#/components/schemas/PrivacyType'
         CityPrivacy:
           $ref: '#/components/schemas/PrivacyType'
@@ -139,6 +160,10 @@ components:
           $ref: '#/components/schemas/PrivacyType'
         SloganPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+        HobbyInterestPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+      required:
+        - CandidateID
 
     StartupProfile:
       type: object
@@ -146,46 +171,66 @@ components:
       properties:
         StartupID:
           type: integer
+          format: int32
           minimum: 1
           maximum: 999999
         UserOwnerID:
           type: integer
+          format: int32
           minimum: 1
         Name:
           type: string
           maxLength: 100
-          pattern: "^[A-Za-z\\s&,-]+$"
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
         Email:
           type: string
           format: email
+          maxLength: 255
+          pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
         Logo:
           type: string
+          format: url
+          maxLength: 255
         Industry:
           type: string
           maxLength: 100
-          pattern: "^[A-Za-z\\s&,-]+$"
-        LinkedInURL:
-          type: string
-          format: uri
-        Slogan:
-          type: string
-          maxLength: 200
-        Description:
-          type: string
-          maxLength: 1000
-
-    StartupProfilePrivacySettings:
-      type: object
-      additionalProperties: false
-      properties:
-        StartupID:
+        PhoneNumberID:
           type: integer
           format: int32
           minimum: 1
-        IndustryPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        SloganPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
+        CountryID:
+          type: integer
+          format: int32
+          minimum: 1
+        City:
+          type: string
+          maxLength: 100
+          pattern: "^[A-Za-z\\s'-]+$"
+        LinkedInURL:
+          type: string
+          format: url
+          maxLength: 255
+        Slogan:
+          type: string
+          maxLength: 200
+        WebsiteLink:
+          type: string
+          format: url
+          maxLength: 255
+        Description:
+          type: string
+          maxLength: 2000
+        CurrentStage:
+          type: string
+          maxLength: 2000
+        Achievement:
+          type: string
+          maxLength: 2000
+      required:
+        - UserOwnerID
+        - Name
+        - Email
+        - Industry
 
     Notification:
       type: object
@@ -194,21 +239,78 @@ components:
         ID:
           type: integer
           format: int32
-          minimum: 1
-          maximum: 999999
         Recipient:
           type: integer
           format: int32
-          minimum: 1
-          maximum: 999999
         Data:
           type: string
-          maxLength: 500
+          maxLength: 2000
+          pattern: "^[A-Za-z0-9]+$"
         Read:
           type: boolean
+          default: false
         CreatedDateTime:
           type: string
           format: date-time
+          maxLength: 25
+          pattern: "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\d)?$"
+        IsStartupNotified:
+          type: boolean
+          default: false
+      required:
+        - Recipient
+        - Read
+        - CreatedDateTime
+
+    Tags:
+      type: object
+      additionalProperties: false
+      properties:
+        ID:
+          type: integer
+          format: int32
+        Value:
+          type: string
+          maxLength: 50
+        Description:
+          type: string
+          maxLength: 2000
+      required:
+        - Value
+
+    Experience:
+      type: object
+      additionalProperties: false
+      properties:
+        ID:
+          type: integer
+          format: int32
+        CandidateOwner:
+          type: integer
+          format: int32
+        CompanyName:
+          type: string
+          maxLength: 100
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+        Role:
+          type: string
+          maxLength: 100
+        Location:
+          type: string
+          maxLength: 100
+          pattern: "^[A-Za-z\\s'-]+$"
+        Description:
+          type: string
+          maxLength: 2000
+        StartDate:
+          type: string
+          format: date
+        EndDate:
+          type: string
+          format: date
+      required:
+        - CandidateOwner
+        - CompanyName
 
 paths:
   /users/me:
@@ -225,6 +327,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   UserAccount:
                     $ref: '#/components/schemas/UserAccount'
@@ -234,27 +337,43 @@ paths:
                     $ref: '#/components/schemas/CandidateProfilePrivacySettings'
         '404':
           description: Profile not found
-
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile not found."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
 
     post:
       tags:
@@ -278,28 +397,56 @@ paths:
       responses:
         '200':
           description: Profile created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile created successfully."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '404':
           description: Profile creation failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile creation failed."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
 
     patch:
       tags:
@@ -323,28 +470,56 @@ paths:
       responses:
         '200':
           description: Profile updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile updated successfully."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '404':
           description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile not found."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
 
   /notifications:
     get:
@@ -365,26 +540,43 @@ paths:
                   $ref: '#/components/schemas/Notification'
         '404':
           description: Notifications not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Notification not found."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
 
   /notifications/{id}:
     patch:
@@ -400,11 +592,14 @@ paths:
           schema:
             type: integer
             format: int32
+            minimum: 1
+            maximum: 2147483647
       requestBody:
         content:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 Read:
                   type: boolean
@@ -412,25 +607,53 @@ paths:
       responses:
         '200':
           description: Notification updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Notification updated successfully."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '404':
           description: Notification not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Notification not found."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   error:
                     type: string
                     example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
