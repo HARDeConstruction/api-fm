@@ -17,7 +17,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      
+
   schemas:
     # ENUMS
     GenderType:
@@ -50,7 +50,7 @@ components:
           type: integer
           format: int32
           minimum: 1
-          maximum: 99999999
+          maximum: 2147483647
         ClerkUserID:
           type: string
           format: uuid
@@ -63,58 +63,84 @@ components:
           pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
         FirstName:
           type: string
-          maxLength: 100
-          pattern: "^[A-Za-z\\s'-]+$"
+          maxLength: 50
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
         LastName:
           type: string
-          maxLength: 100
-          pattern: "^[A-Za-z\\s'-]+$"
-        IsCandidate:
-          type: boolean
-        IsStartup:
-          type: boolean
+          maxLength: 50
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
       required:
         - ClerkUserID
         - Email
         - FirstName
         - LastName
 
-    CandidateProfile:
+    PhoneNumber:
       type: object
       additionalProperties: false
       properties:
-        CandidateID:
+        PhoneNumberID:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        CountryCode:
+          type: string
+          maxLength: 5
+          pattern: '^\d+$'
+        AreaCode:
+          type: string
+          maxLength: 5
+          pattern: '^\d+$'
+        Number:
+          type: string
+          maxLength: 15
+          pattern: '^\d+$'
+      required:
+        - CountryCode
+        - AreaCode
+        - Number
+
+    ProfileCommonInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        ProfileID:
           type: integer
           format: int32
           minimum: 1
-          maximum: 99999999
+          maximum: 2147483647
         UserID:
           type: integer
           format: int32
           minimum: 1
-          maximum: 99999999
+          maximum: 2147483647
+        IsStartup:
+          type: boolean
+          default: false
+        Name:
+          type: string
+          maxLength: 100
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
+        Email:
+          type: string
+          format: email
+          maxLength: 255
+          pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
         Industry:
           type: string
           maxLength: 100
           pattern: "^[A-Za-z\\s&,-]+$"
-        PhoneNumberID:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 999999999999
-        CountryID:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 99999999
+        PhoneNumber:
+          $ref: "#/components/schemas/PhoneNumber"
+        Country:
+          type: string
+          maxLength: 100
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
         City:
           type: string
           maxLength: 100
-          pattern: "^[A-Za-z\\s'-]+$"
-        University:
-          type: string
-          maxLength: 100
-          pattern: "^[A-Za-z0-9\\s',.-]+$"
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
         LinkedInURL:
           type: string
           format: url
@@ -122,160 +148,148 @@ components:
           pattern: "^https?://(www\\.)?linkedin\\.com/.*$"
         Slogan:
           type: string
-          maxLength: 300
-          pattern: "^[A-Za-z0-9]+$"
+          maxLength: 255
+          pattern: "^([[:print:]]|\r|\n)*$"
+        WebsiteLink:
+          type: string
+          maxLength: 255
+          pattern: \"(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
+        AvatarURL:
+          type: string
+          maxLength: 255
+          pattern: \"(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
+        Description:
+          type: string
+          maxLength: 500
+          pattern: "^([[:print:]]|\r|\n)*$"
+
+      required:
+        - UserID
+        - Name
+        - Email
+        - Industry
+        - Country
+
+    ProfileSpecificCandidateInfo:
+      type: object
+      additionalProperties: false
+      properties:
         HobbyInterest:
           type: string
           maxLength: 500
           pattern: "^[A-Za-z0-9]+$"
         Gender:
           $ref: '#/components/schemas/GenderType'
-      required:
-        - UserID
-        - Industry
-        - Gender
+        Education:
+          type: string
+          maxLength: 500
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
 
-    CandidateProfilePrivacySettings:
+    ProfileSpecificStartupInfo:
       type: object
       additionalProperties: false
       properties:
-        CandidateID:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 99999999
-        GenderPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        IndustryPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        PhoneNumberIDPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        CountryIDPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        CityPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        UniversityPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        LinkedInURLPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        SloganPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-        HobbyInterestPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
-      required:
-        - CandidateID
+        CurrentStage:
+          type: string
+          maxLength: 255
+          pattern: "^([[:print:]]|\r|\n)*$"
 
-    StartupProfile:
+    ProfilePreviewCard:
       type: object
       additionalProperties: false
       properties:
-        StartupID:
+        ProfileID:
           type: integer
           format: int32
           minimum: 1
-          maximum: 999999
-        UserOwnerID:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 999999
+          maximum: 2147483647
+        IsStartup:
+          type: boolean
+          default: false
         Name:
           type: string
           maxLength: 100
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
-        Email:
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
+        Occupation:
           type: string
-          format: email
+          maxLength: 500
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
+        AvatarURL:
+          type: string
           maxLength: 255
-          pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
-        Logo:
-          type: string
-          format: url
-          maxLength: 2048
-          pattern: "^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp|svg)$"
-        Industry:
-          type: string
-          maxLength: 100
-          pattern: "^[A-Za-z\\s'-]+$"
-        PhoneNumberID:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 099999999999
-        CountryID:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 99999999
-        City:
-          type: string
-          maxLength: 100
-          pattern: "^[A-Za-z\\s'-]+$"
-        LinkedInURL:
-          type: string
-          format: url
-          maxLength: 255
-          pattern: "^https?://(www\\.)?linkedin\\.com/.*$"
-        Slogan:
-          type: string
-          maxLength: 200
-          pattern: "^[A-Za-z0-9]+$"
-        WebsiteLink:
-          type: string
-          format: url
-          maxLength: 255
-          pattern: "^https?://.*$"
-        Description:
-          type: string
-          maxLength: 99999
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
-        CurrentStage:
-          type: string
-          maxLength: 200
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
-        Achievement:
-          type: string
-          maxLength: 2000
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          pattern: \"(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
+          default: \"https://0.gravatar.com/avatar/d269186839584d00c4632d970ec5735acc0f70aa8a0eba0f69455c3dc52d7c72?size=256"
       required:
-        - UserOwnerID
+        - ProfileID
+        - IsStartup
         - Name
-        - Email
-        - Industry
+        - Occupation
+        - AvatarURL
 
-    StartupProfilePrivacySettings:
+
+    ProfilePrivacySettings:
       type: object
       additionalProperties: false
       properties:
-        StartupID:
+        ProfileID:
           type: integer
           format: int32
           minimum: 1
-          maximum: 99999999
+          maximum: 2147483647
+        GenderPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         IndustryPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
+        EmailPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         PhoneNumberIDPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         CountryIDPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         CityPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
+        UniversityPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         LinkedInURLPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         SloganPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         WebsiteLinkPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-        DescriptionPrivacy:
+          default: 'public'
+        CertificatePrivacy:
           $ref: '#/components/schemas/PrivacyType'
-        CurrentStagePrivacy:
+          default: 'public'
+        ExperiencePrivacy:
           $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
+        HobbyInterestPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
+        EducationPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
         AchievementPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-        ViewGraphPrivacy:
-          $ref: '#/components/schemas/PrivacyType'
+          default: 'public'
       required:
-        - StartupID
+        - ProfileID
+        - IndustryPrivacy
+        - EmailPrivacy
+        - CountryIDPrivacy
+        - CityPrivacy
+        - LinkedInURLPrivacy
+        - SloganPrivacy
+        - AchievementPrivacy
 
     StartupMembership:
       type: object
@@ -299,11 +313,11 @@ components:
         Role:
           type: string
           maxLength: 100
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
         Description:
           type: string
           maxLength: 2000
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          pattern: "^([[:print:]]|\r|\n)*$"
       required:
         - ID
         - StartupID
@@ -317,13 +331,17 @@ components:
         ID:
           type: integer
           format: int32
+          minimum: 1
+          maximum: 2147483647
         Recipient:
           type: integer
           format: int32
+          minimum: 1
+          maximum: 2147483647
         Data:
           type: string
           maxLength: 2000
-          pattern: "^[A-Za-z0-9]+$"
+          pattern: "^([[:print:]]|\r|\n)*$"
         Read:
           type: boolean
           default: false
@@ -347,12 +365,16 @@ components:
         ID:
           type: integer
           format: int32
+          minimum: 1
+          maximum: 2147483647
         Value:
           type: string
           maxLength: 50
+          pattern: "^[[:print:]]*$"
         Description:
           type: string
           maxLength: 2000
+          pattern: "^([[:print:]]|\r|\n)*$"
       required:
         - Value
 
@@ -363,6 +385,8 @@ components:
         ID:
           type: integer
           format: int32
+          minimum: 0
+          maximum: 2147483647
         CandidateOwner:
           type: integer
           format: int32
@@ -373,13 +397,15 @@ components:
         Role:
           type: string
           maxLength: 100
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
         Location:
           type: string
           maxLength: 100
-          pattern: "^[A-Za-z\\s'-]+$"
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
         Description:
           type: string
           maxLength: 2000
+          pattern: "^([[:print:]]|\r|\n)*$"
         StartDate:
           type: string
           format: date
@@ -390,29 +416,90 @@ components:
         - CandidateOwner
         - CompanyName
 
+
+
 paths:
-  /users/me:
-    get:
+  /getuserprofiles:
+    get: 
       tags:
         - Profile
-      summary: Get the current user's profile
-      description: Fetch the profile details of the logged-in user, including basic and candidate-specific information.
-      operationId: getUserProfile
+      summary: Get the list of current user's profiles
+      description: Fetch the profiles details of the logged-in user, including candidate and startup profiles information.
+      operationId: getUserProfiles
       responses:
         '200':
-          description: User profile details.
+          description: User profiles details.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 30
+                items: 
+                  $ref: "#/components/schemas/ProfilePreviewCard" 
+        '404':
+          description: Profile not found
           content:
             application/json:
               schema:
                 type: object
                 additionalProperties: false
                 properties:
-                  UserAccount:
-                    $ref: '#/components/schemas/UserAccount'
-                  CandidateProfile:
-                    $ref: '#/components/schemas/CandidateProfile'
+                  error:
+                    type: string
+                    example: "User not found or No profile was found for this user."
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+
+  /users/me:
+    get:
+      tags:
+        - Profile
+      summary: Get the current user's profile
+      description: Fetch the current active profile of the current user, including basic and candidate-specific information.
+      operationId: getCurrentUserProfile
+      responses:
+        '200':
+          description: Get current user profile's detail.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  ProfileCommonInfo:
+                    $ref: '#/components/schemas/ProfileCommonInfo'
+                  ProfileSpecificCandidateInfo:
+                    $ref: '#/components/schemas/ProfileSpecificCandidateInfo'
+                  ProfileSpecificStartupInfo:
+                    $ref: '#/components/schemas/ProfileSpecificStartupInfo'
                   PrivacySettings:
-                    $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+                    $ref: '#/components/schemas/ProfilePrivacySettings'
         '404':
           description: Profile not found
           content:
@@ -466,12 +553,14 @@ paths:
               type: object
               additionalProperties: false
               properties:
-                UserAccount:
-                  $ref: '#/components/schemas/UserAccount'
-                CandidateProfile:
-                  $ref: '#/components/schemas/CandidateProfile'
+                ProfileCommonInfo:
+                  $ref: '#/components/schemas/ProfileCommonInfo'
+                ProfileSpecificCandidateInfo:
+                  $ref: '#/components/schemas/ProfileSpecificCandidateInfo'
+                ProfileSpecificStartupInfo:
+                  $ref: '#/components/schemas/ProfileSpecificStartupInfo'
                 PrivacySettings:
-                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+                  $ref: '#/components/schemas/ProfilePrivacySettings'
       responses:
         '200':
           description: Profile created successfully.
@@ -539,12 +628,14 @@ paths:
               type: object
               additionalProperties: false
               properties:
-                UserAccount:
-                  $ref: '#/components/schemas/UserAccount'
-                CandidateProfile:
-                  $ref: '#/components/schemas/CandidateProfile'
+                ProfileCommonInfo:
+                  $ref: '#/components/schemas/ProfileCommonInfo'
+                ProfileSpecificCandidateInfo:
+                  $ref: '#/components/schemas/ProfileSpecificCandidateInfo'
+                ProfileSpecificStartupInfo:
+                  $ref: '#/components/schemas/ProfileSpecificStartupInfo'
                 PrivacySettings:
-                  $ref: '#/components/schemas/CandidateProfilePrivacySettings'
+                  $ref: '#/components/schemas/ProfilePrivacySettings'
       responses:
         '200':
           description: Profile updated successfully.
@@ -598,215 +689,6 @@ paths:
                     example: "An unexpected error occurred"
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-  
-  /users/mystartup:
-    get:
-      tags:
-        - Startup
-      summary: Get the current user's startup profile
-      description: Fetch the startup profile details of the logged-in user.
-      operationId: getUserStartupProfile
-      responses:
-        '200':
-          description: Startup profile details.
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  UserAccount:
-                    $ref: '#/components/schemas/UserAccount'
-                  StartupProfile:
-                    $ref: '#/components/schemas/StartupProfile'
-                  PrivacySettings:
-                    $ref: '#/components/schemas/StartupProfilePrivacySettings'
-        '404':
-          description: Startup profile not found
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "Startup profile not found."
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "Unauthorized access"
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "An unexpected error occurred"
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-
-    post:
-      tags:
-        - Startup
-      summary: Create a new startup profile
-      description: Create a startup profile for the logged-in user.
-      operationId: createUserStartupProfile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              properties:
-                UserAccount:
-                  $ref: '#/components/schemas/UserAccount'
-                StartupProfile:
-                  $ref: '#/components/schemas/StartupProfile'
-                PrivacySettings:
-                  $ref: '#/components/schemas/StartupProfilePrivacySettings'
-      responses:
-        '200':
-          description: Startup profile created successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  message:
-                    type: string
-                    example: "Startup profile created successfully."
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        '404':
-          description: Startup profile creation failed.
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "Startup profile creation failed."
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "Unauthorized access"
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "An unexpected error occurred"
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-
-    patch:
-      tags:
-        - Startup
-      summary: Update the current user's startup profile
-      description: Update startup profile information for the logged-in user.
-      operationId: updateUserStartupProfile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              properties:
-                UserAccount:
-                  $ref: '#/components/schemas/UserAccount'
-                StartupProfile:
-                  $ref: '#/components/schemas/StartupProfile'
-                PrivacySettings:
-                  $ref: '#/components/schemas/StartupProfilePrivacySettings'
-      responses:
-        '200':
-          description: Startup profile updated successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  message:
-                    type: string
-                    example: "Startup profile updated successfully."
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        '404':
-          description: Startup profile not found
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "Startup profile not found."
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "Unauthorized access"
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                properties:
-                  error:
-                    type: string
-                    example: "An unexpected error occurred"
-                    maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
-
 
   /notifications:
     get:
