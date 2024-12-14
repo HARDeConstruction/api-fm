@@ -281,6 +281,8 @@ components:
           $ref: '#/components/schemas/PrivacyType'
         EducationPrivacy:
           $ref: '#/components/schemas/PrivacyType'
+        DateOfBirthPrivacy:
+          $ref: '#/components/schemas/PrivacyType'
         AchievementPrivacy:
           $ref: '#/components/schemas/PrivacyType'
       required:
