@@ -419,8 +419,8 @@ components:
 
 
 paths:
-  /getuserprofiles:
-    get: 
+  /getUserProfiles:
+    get:
       tags:
         - Profile
       summary: Get the list of current user's profiles
@@ -434,8 +434,8 @@ paths:
               schema:
                 type: array
                 maxItems: 30
-                items: 
-                  $ref: "#/components/schemas/ProfilePreviewCard" 
+                items:
+                  $ref: "#/components/schemas/ProfilePreviewCard"
         '404':
           description: Profile not found
           content:
