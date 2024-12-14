@@ -113,7 +113,7 @@ profile_preview_card:
         type: tag 
         type: privacy
 
-/profile/create
+/profile/create (current loggedin profile)
     // post 
         type: profile
         type: experiences
