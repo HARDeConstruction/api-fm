@@ -5,8 +5,9 @@ info:
   description: The API for the FounderMatching project by HarDeconstruction
 
 servers:
+  # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/DUCLNC2004/FounderMatching/1.0.0
+    url: https://virtserver.swaggerhub.com/HARDeConstruction/FounderMatchingAPI/1.0.0
 
 security:
   - bearerAuth: []
@@ -49,7 +50,7 @@ components:
         UserID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         ClerkUserID:
           type: string
@@ -70,6 +71,7 @@ components:
           maxLength: 50
           pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
       required:
+        - UserID
         - ClerkUserID
         - Email
         - FirstName
@@ -101,19 +103,19 @@ components:
         - AreaCode
         - Number
 
-    ProfileCommonInfo:
+    ProfileInfo: 
       type: object
       additionalProperties: false
       properties:
         ProfileID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         UserID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         IsStartup:
           type: boolean
@@ -162,37 +164,45 @@ components:
           type: string
           maxLength: 500
           pattern: "^([[:print:]]|\r|\n)*$"
-
-      required:
-        - UserID
-        - Name
-        - Email
-        - Industry
-        - Country
-
-    ProfileSpecificCandidateInfo:
-      type: object
-      additionalProperties: false
-      properties:
+        # Candidate only fields
         HobbyInterest:
           type: string
           maxLength: 500
-          pattern: "^[A-Za-z0-9]+$"
+          pattern: "^([[:print:]]|\r|\n)*$"
         Gender:
           $ref: '#/components/schemas/GenderType'
         Education:
           type: string
           maxLength: 500
           pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
-
-    ProfileSpecificStartupInfo:
-      type: object
-      additionalProperties: false
-      properties:
+        # Startup only fields
         CurrentStage:
           type: string
           maxLength: 255
           pattern: "^([[:print:]]|\r|\n)*$"
+        # Array-valued fields
+        Experiences:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/Experience'
+        Certificates:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/Certificate'
+        Achievements:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/Achievement'
+        
+      required:
+        - UserID
+        - Name
+        - Email
+        - Industry
+        - Country
 
     ProfilePreviewCard:
       type: object
@@ -201,7 +211,7 @@ components:
         ProfileID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         IsStartup:
           type: boolean
@@ -234,53 +244,38 @@ components:
         ProfileID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         GenderPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         IndustryPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         EmailPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         PhoneNumberIDPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         CountryIDPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         CityPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         UniversityPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         LinkedInURLPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         SloganPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         WebsiteLinkPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         CertificatePrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         ExperiencePrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         HobbyInterestPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         EducationPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
         AchievementPrivacy:
           $ref: '#/components/schemas/PrivacyType'
-          default: 'public'
       required:
         - ProfileID
         - IndustryPrivacy
@@ -298,17 +293,17 @@ components:
         ID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         StartupID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         UserID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         Role:
           type: string
@@ -331,12 +326,12 @@ components:
         ID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         Recipient:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         Data:
           type: string
@@ -365,7 +360,7 @@ components:
         ID:
           type: integer
           format: int32
-          minimum: 1
+          minimum: 0
           maximum: 2147483647
         Value:
           type: string
@@ -382,14 +377,16 @@ components:
       type: object
       additionalProperties: false
       properties:
-        ID:
+        ExperienceID:
           type: integer
           format: int32
           minimum: 0
           maximum: 2147483647
-        CandidateOwner:
+        ProfileOwner:
           type: integer
           format: int32
+          minimum: 0
+          maximum: 2147483647
         CompanyName:
           type: string
           maxLength: 100
@@ -409,14 +406,87 @@ components:
         StartDate:
           type: string
           format: date
+          maxLength: 20
         EndDate:
           type: string
           format: date
+          maxLength: 20
       required:
-        - CandidateOwner
+        - ProfileOwner
         - CompanyName
+        - StartDate
 
-
+    Certificate:
+      type: object
+      additionalProperties: false
+      properties:
+        CertificateID:  
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        ProfileOwner:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        Name:
+          type: string
+          maxLength: 255
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+        Skills:
+          type: string
+          maxLength: 100
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+        Description:
+          type: string
+          maxLength: 2000
+          pattern: "^([[:print:]]|\r|\n)*$"
+        StartDate:
+          type: string
+          format: date
+          maxLength: 20
+        EndDate:
+          type: string
+          format: date
+          maxLength: 20
+        GPA:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 2147483647
+      required:
+        - ProfileOwner
+        - Name
+    Achievement:
+      type: object
+      additionalProperties: false
+      properties:
+        AchievementID:  
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        ProfileOwner:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        Name:
+          type: string
+          maxLength: 255
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+        Description:
+          type: string
+          maxLength: 2000
+          pattern: "^([[:print:]]|\r|\n)*$"
+        Date:
+          type: string
+          format: date
+          maxLength: 20
+      required:
+        - ProfileOwner
+        - Name
 
 paths:
   /getUserProfiles:
@@ -476,7 +546,7 @@ paths:
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
 
-  /users/me:
+  /profile/me:
     get:
       tags:
         - Profile
@@ -492,12 +562,8 @@ paths:
                 type: object
                 additionalProperties: false
                 properties:
-                  ProfileCommonInfo:
-                    $ref: '#/components/schemas/ProfileCommonInfo'
-                  ProfileSpecificCandidateInfo:
-                    $ref: '#/components/schemas/ProfileSpecificCandidateInfo'
-                  ProfileSpecificStartupInfo:
-                    $ref: '#/components/schemas/ProfileSpecificStartupInfo'
+                  ProfileInfo:
+                    $ref: '#/components/schemas/ProfileInfo'
                   PrivacySettings:
                     $ref: '#/components/schemas/ProfilePrivacySettings'
         '404':
@@ -540,12 +606,12 @@ paths:
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
 
-    post:
+    patch:
       tags:
         - Profile
-      summary: Create a new user profile
-      description: Create a profile for the logged-in user.
-      operationId: createUserProfile
+      summary: Update the current user's profile
+      description: Update profile information for the logged-in user.
+      operationId: updateUserProfile
       requestBody:
         content:
           application/json:
@@ -553,17 +619,13 @@ paths:
               type: object
               additionalProperties: false
               properties:
-                ProfileCommonInfo:
-                  $ref: '#/components/schemas/ProfileCommonInfo'
-                ProfileSpecificCandidateInfo:
-                  $ref: '#/components/schemas/ProfileSpecificCandidateInfo'
-                ProfileSpecificStartupInfo:
-                  $ref: '#/components/schemas/ProfileSpecificStartupInfo'
+                ProfileInfo:
+                    $ref: '#/components/schemas/ProfileInfo'
                 PrivacySettings:
                   $ref: '#/components/schemas/ProfilePrivacySettings'
       responses:
         '200':
-          description: Profile created successfully.
+          description: Profile updated successfully.
           content:
             application/json:
               schema:
@@ -572,11 +634,11 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Profile created successfully."
+                    example: "Profile updated successfully."
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '404':
-          description: Profile creation failed.
+          description: Profile not found
           content:
             application/json:
               schema:
@@ -585,7 +647,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Profile creation failed."
+                    example: "Profile not found."
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '401':
@@ -615,12 +677,13 @@ paths:
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
 
-    patch:
+  /profile/create:
+   post:
       tags:
         - Profile
-      summary: Update the current user's profile
-      description: Update profile information for the logged-in user.
-      operationId: updateUserProfile
+      summary: Create a new user profile
+      description: Create a profile for the logged-in user.
+      operationId: createUserProfile
       requestBody:
         content:
           application/json:
@@ -628,17 +691,16 @@ paths:
               type: object
               additionalProperties: false
               properties:
-                ProfileCommonInfo:
-                  $ref: '#/components/schemas/ProfileCommonInfo'
-                ProfileSpecificCandidateInfo:
-                  $ref: '#/components/schemas/ProfileSpecificCandidateInfo'
-                ProfileSpecificStartupInfo:
-                  $ref: '#/components/schemas/ProfileSpecificStartupInfo'
+                ProfileInfo:
+                  $ref: '#/components/schemas/ProfileInfo'
                 PrivacySettings:
                   $ref: '#/components/schemas/ProfilePrivacySettings'
+              required:
+                - ProfileInfo
+                - PrivacySettings
       responses:
         '200':
-          description: Profile updated successfully.
+          description: Profile created successfully.
           content:
             application/json:
               schema:
@@ -647,11 +709,11 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Profile updated successfully."
+                    example: "Profile created successfully."
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '404':
-          description: Profile not found
+          description: Profile creation failed.
           content:
             application/json:
               schema:
@@ -660,7 +722,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Profile not found."
+                    example: "Profile creation failed."
                     maxLength: 100
                     pattern: "^[A-Za-z0-9 ,.?!'-]+$"
         '401':
