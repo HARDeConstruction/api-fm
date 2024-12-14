@@ -175,6 +175,10 @@ components:
           type: string
           maxLength: 500
           pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
+        DateOfBirth:
+          type: string
+          format: date
+          maxLength: 64
         # Startup only fields
         CurrentStage:
           type: string
