@@ -196,13 +196,16 @@ components:
           maxItems: 20
           items:
             $ref: '#/components/schemas/Achievement'
-        
+        PrivacySettings:
+          $ref: '#/components/schemas/ProfilePrivacySettings'
+
       required:
         - UserID
         - Name
         - Email
         - Industry
         - Country
+        - PrivacySettings
 
     ProfilePreviewCard:
       type: object
@@ -343,7 +346,7 @@ components:
         CreatedDateTime:
           type: string
           format: date-time
-          maxLength: 25
+          maxLength: 64
           pattern: "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\d)?$"
         IsStartupNotified:
           type: boolean
@@ -406,11 +409,11 @@ components:
         StartDate:
           type: string
           format: date
-          maxLength: 20
+          maxLength: 64
         EndDate:
           type: string
           format: date
-          maxLength: 20
+          maxLength: 64
       required:
         - ProfileOwner
         - CompanyName
@@ -445,11 +448,11 @@ components:
         StartDate:
           type: string
           format: date
-          maxLength: 20
+          maxLength: 64
         EndDate:
           type: string
           format: date
-          maxLength: 20
+          maxLength: 64
         GPA:
           type: number
           format: float
@@ -483,7 +486,7 @@ components:
         Date:
           type: string
           format: date
-          maxLength: 20
+          maxLength: 64
       required:
         - ProfileOwner
         - Name
@@ -564,8 +567,8 @@ paths:
                 properties:
                   ProfileInfo:
                     $ref: '#/components/schemas/ProfileInfo'
-                  PrivacySettings:
-                    $ref: '#/components/schemas/ProfilePrivacySettings'
+                required:
+                - ProfileInfo
         '404':
           description: Profile not found
           content:
@@ -620,9 +623,9 @@ paths:
               additionalProperties: false
               properties:
                 ProfileInfo:
-                    $ref: '#/components/schemas/ProfileInfo'
-                PrivacySettings:
-                  $ref: '#/components/schemas/ProfilePrivacySettings'
+                  $ref: '#/components/schemas/ProfileInfo'
+              required:
+              - ProfileInfo
       responses:
         '200':
           description: Profile updated successfully.
@@ -693,11 +696,8 @@ paths:
               properties:
                 ProfileInfo:
                   $ref: '#/components/schemas/ProfileInfo'
-                PrivacySettings:
-                  $ref: '#/components/schemas/ProfilePrivacySettings'
               required:
-                - ProfileInfo
-                - PrivacySettings
+              - ProfileInfo
       responses:
         '200':
           description: Profile created successfully.
