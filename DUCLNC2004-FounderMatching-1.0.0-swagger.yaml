@@ -1021,7 +1021,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Unauthorized access:: Not logged-in or invalid token."
+                    example: "Unauthorized access: Not logged-in or invalid token."
                     maxLength: 100
                     pattern: "^([[:print:]])*$"
         '403':
@@ -1051,3 +1051,511 @@ paths:
                     maxLength: 100
                     pattern: "^([[:print:]])*$"
   
+  /save/{from_id}/{to_id}:
+    post:
+      tags:
+        - Saves
+      summary: Save a profile
+      description: Save a profile that the user was viewing. 
+      operationId: save
+      parameters:
+        - name: from_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+        - name: to_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 7
+      responses:
+        '200':
+          description: Profile saved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile saved successfully."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false 
+                properties:
+                  error:
+                    type: string
+                    example: "Profile to save is not found."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Forbidden access: User does not own this profile, therefore cannot save from this profile."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+  
+    delete:
+      tags:
+        - Saves
+      summary: Unsave a profile
+      description: Unsave a profile that the user was viewing.
+      operationId: unsave
+      parameters:
+        - name: from_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+        - name: to_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 7
+      responses:
+        '200':
+          description: Profile unsaved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile unsaved successfully."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile to unsave is not found."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: 
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Forbidden access: User does not own this profile, therefore cannot unsave from this profile. Or, profile to_id is not in the list of from_id's saved profiles."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+  /getSaved/{profile_id}:
+    get:
+      tags:
+        - Saves
+      summary: List of saved profiles
+      description: List of profile_id's saved profiles, returned as a list of profile preview cards.
+      operationId: getSaved
+      parameters:
+        - name: profile_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+      responses:
+        '200':
+          description: List of saved profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 20
+                items:
+                  $ref: "#/components/schemas/ProfilePreviewCard"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile not found."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+  
+  /skip/{from_id}/{to_id}:
+    post:
+      tags:
+        - Connections
+      summary: Skip a profile
+      description: Skip a profile that the user was viewing.
+      operationId: skip
+      parameters:
+        - name: from_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+        - name: to_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 7
+      responses:
+        '200':
+          description: Profile skipped successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Profile skipped successfully."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile to skip is not found."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Forbidden access: User does not own this profile, therefore cannot skip from this profile."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+
+  /getSkipped/{profile_id}:
+    get:
+      tags:
+        - Connections
+      summary: List of skipped profiles
+      description: List of profile_id's skipped profiles, returned as a list of profile preview cards.
+      operationId: getSkipped
+      parameters:
+        - name: profile_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+      responses:
+        '200':
+          description: List of skipped profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 20
+                items:
+                  $ref: "#/components/schemas/ProfilePreviewCard"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile not found."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+
+  /discover/{profile_id}/{index_from}/{index_to}:
+    get:
+      tags:
+        - Connections
+      summary: List of suggested profiles to connect to
+      description: List of profiles suggested to connect to from the specified profile ID. Imagine an algorithm that sorts all profiles according to a recommender algorithm. This API gets the suggested profiles from the ranking range provided.
+      operationId: discover
+      parameters:
+        - name: profile_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+        - name: index_from
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 2147483647
+            example: 1
+        - name: index_to
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 2147483647
+            example: 10
+      responses:
+        '200':
+          description: List of suggested profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 10
+                items:
+                  $ref: "#/components/schemas/ProfileInfo"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile not found."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Forbidden access: User does not own this profile, therefore cannot connect to this profile."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
