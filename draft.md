@@ -138,6 +138,10 @@ profile_preview_card:
     to_profile_id: int
     timestamp: DateTime
 
+/view (post)
+    from_profile_id: int
+    to_profile_id: int
+    timestamp: DateTime
 
 /discover/candidate
 /discover/startup

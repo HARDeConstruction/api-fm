@@ -527,7 +527,7 @@ paths:
                     type: string
                     example: "User not found or No profile was found for this user."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '401':
           description: Unauthorized
           content:
@@ -540,7 +540,7 @@ paths:
                     type: string
                     example: "Unauthorized access"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         default:
           description: Unexpected error
           content:
@@ -553,7 +553,7 @@ paths:
                     type: string
                     example: "An unexpected error occurred"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
 
   /profile/me:
     get:
@@ -587,7 +587,7 @@ paths:
                     type: string
                     example: "Profile not found."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '401':
           description: Unauthorized
           content:
@@ -600,7 +600,7 @@ paths:
                     type: string
                     example: "Unauthorized access"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         default:
           description: Unexpected error
           content:
@@ -613,7 +613,7 @@ paths:
                     type: string
                     example: "An unexpected error occurred"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
 
     patch:
       tags:
@@ -645,7 +645,7 @@ paths:
                     type: string
                     example: "Profile updated successfully."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '404':
           description: Profile not found
           content:
@@ -658,7 +658,7 @@ paths:
                     type: string
                     example: "Profile not found."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '401':
           description: Unauthorized
           content:
@@ -671,7 +671,7 @@ paths:
                     type: string
                     example: "Unauthorized access"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         default:
           description: Unexpected error
           content:
@@ -684,7 +684,7 @@ paths:
                     type: string
                     example: "An unexpected error occurred"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
 
   /profile/create:
    post:
@@ -717,7 +717,7 @@ paths:
                     type: string
                     example: "Profile created successfully."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '404':
           description: Profile creation failed.
           content:
@@ -730,7 +730,7 @@ paths:
                     type: string
                     example: "Profile creation failed."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '401':
           description: Unauthorized
           content:
@@ -743,7 +743,7 @@ paths:
                     type: string
                     example: "Unauthorized access"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         default:
           description: Unexpected error
           content:
@@ -756,7 +756,7 @@ paths:
                     type: string
                     example: "An unexpected error occurred"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
 
   /profile/{id}:
     get:
@@ -793,7 +793,7 @@ paths:
                     type: string
                     example: "Profile not found."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '401':
           description: Unauthorized
           content:
@@ -806,7 +806,7 @@ paths:
                     type: string
                     example: "Unauthorized access"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         default:
           description: Unexpected error
           content:
@@ -819,7 +819,7 @@ paths:
                     type: string
                     example: "An unexpected error occurred"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
 
   /notifications:
     get:
@@ -850,7 +850,7 @@ paths:
                     type: string
                     example: "Notification not found."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '401':
           description: Unauthorized
           content:
@@ -863,7 +863,7 @@ paths:
                     type: string
                     example: "Unauthorized access"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         default:
           description: Unexpected error
           content:
@@ -876,7 +876,7 @@ paths:
                     type: string
                     example: "An unexpected error occurred"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
 
   /notifications/{id}:
     patch:
@@ -917,7 +917,7 @@ paths:
                     type: string
                     example: "Notification updated successfully."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '404':
           description: Notification not found
           content:
@@ -930,7 +930,7 @@ paths:
                     type: string
                     example: "Notification not found."
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         '401':
           description: Unauthorized
           content:
@@ -943,7 +943,7 @@ paths:
                     type: string
                     example: "Unauthorized access"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
         default:
           description: Unexpected error
           content:
@@ -956,4 +956,98 @@ paths:
                     type: string
                     example: "An unexpected error occurred"
                     maxLength: 100
-                    pattern: "^[A-Za-z0-9 ,.?!'-]+$"
+                    pattern: "^([[:print:]])*$"
+  
+  /connect/{from_id}/{to_id}:
+    post:
+      tags:
+        - Connections
+      summary: Establish a connection between two profiles
+      description: Request to connect profilefrom_id to profile to_id.
+      operationId: connectRequest
+      parameters:
+        - name: from_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+        - name: to_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 7
+      responses:
+        '200':
+          description: Connection request sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "Connection request sent successfully."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile to connect to is not found."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access:: Not logged-in or invalid token."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Forbidden access: User does not own this profile, therefore cannot request a connection from this profile."
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "An unexpected error occurred"
+                    maxLength: 100
+                    pattern: "^([[:print:]])*$"
+  
