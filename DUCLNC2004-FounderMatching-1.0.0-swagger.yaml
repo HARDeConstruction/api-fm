@@ -77,32 +77,6 @@ components:
         - FirstName
         - LastName
 
-    PhoneNumber:
-      type: object
-      additionalProperties: false
-      properties:
-        PhoneNumberID:
-          type: integer
-          format: int32
-          minimum: 0
-          maximum: 2147483647
-        CountryCode:
-          type: string
-          maxLength: 5
-          pattern: '^\d+$'
-        AreaCode:
-          type: string
-          maxLength: 5
-          pattern: '^\d+$'
-        Number:
-          type: string
-          maxLength: 15
-          pattern: '^\d+$'
-      required:
-        - CountryCode
-        - AreaCode
-        - Number
-
     ProfileInfo: 
       type: object
       additionalProperties: false
@@ -134,7 +108,10 @@ components:
           maxLength: 100
           pattern: "^[A-Za-z\\s&,-]+$"
         PhoneNumber:
-          $ref: "#/components/schemas/PhoneNumber"
+          type: string
+          format: phone
+          maxLength: 20
+          pattern: "^\\+[1-9]{1}[0-9]{3,14}$"
         Country:
           type: string
           maxLength: 100
@@ -156,10 +133,10 @@ components:
           type: string
           maxLength: 255
           pattern: \"(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
-        AvatarURL:
+        Avatar: 
           type: string
-          maxLength: 255
-          pattern: \"(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
+          format: binary
+          maxLength: 2097152
         Description:
           type: string
           maxLength: 500
@@ -231,18 +208,18 @@ components:
           type: string
           maxLength: 500
           pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
-        AvatarURL:
+        Avatar: 
           type: string
-          maxLength: 255
-          pattern: \"(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
-          default: \"https://0.gravatar.com/avatar/d269186839584d00c4632d970ec5735acc0f70aa8a0eba0f69455c3dc52d7c72?size=256"
+          format: binary
+          maxLength: 2097152
+        Tags:
+          type: string
+          maxLength: 300
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
       required:
         - ProfileID
         - IsStartup
         - Name
-        - Occupation
-        - AvatarURL
-
 
     ProfilePrivacySettings:
       type: object
@@ -327,7 +304,7 @@ components:
         - StartupID
         - UserID
         - Role
-
+          
     Notification:
       type: object
       additionalProperties: false
@@ -361,26 +338,6 @@ components:
         - Recipient
         - Read
         - CreatedDateTime
-
-    Tags:
-      type: object
-      additionalProperties: false
-      properties:
-        ID:
-          type: integer
-          format: int32
-          minimum: 0
-          maximum: 2147483647
-        Value:
-          type: string
-          maxLength: 50
-          pattern: "^[[:print:]]*$"
-        Description:
-          type: string
-          maxLength: 2000
-          pattern: "^([[:print:]]|\r|\n)*$"
-      required:
-        - Value
 
     Experience:
       type: object
@@ -420,6 +377,10 @@ components:
           type: string
           format: date
           maxLength: 64
+        Tags:
+          type: string
+          maxLength: 300
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
       required:
         - ProfileOwner
         - CompanyName
@@ -464,6 +425,10 @@ components:
           format: float
           minimum: 0
           maximum: 2147483647
+        Tags:
+          type: string
+          maxLength: 300
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
       required:
         - ProfileOwner
         - Name
@@ -493,9 +458,58 @@ components:
           type: string
           format: date
           maxLength: 64
+        Tags:
+          type: string
+          maxLength: 300
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
       required:
         - ProfileOwner
         - Name
+    JobPosition:
+      type: object
+      additionalProperties: false
+      properties:
+        JobPositionID:  
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        ProfileOwner:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        JobTitle:
+          type: string
+          maxLength: 100
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+        IsOpening: 
+          type: boolean
+          default: true
+        Country: 
+          type: string
+          maxLength: 100
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
+        City:
+          type: string
+          maxLength: 100
+          pattern: \"^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$"
+        StartDate:
+          type: string
+          format: date
+          maxLength: 64
+        Description:
+          type: string
+          maxLength: 10000
+          pattern: "^([[:print:]]|\r|\n)*$"
+        Tags:
+          type: string
+          maxLength: 300
+          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+      required:
+        - ProfileOwner
+        - JobTitle
+        - Country
 
 paths:
   /getUserProfiles:
