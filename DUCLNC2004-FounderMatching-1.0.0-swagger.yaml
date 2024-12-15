@@ -177,6 +177,11 @@ components:
           maxItems: 20
           items:
             $ref: '#/components/schemas/Achievement'
+        JobPositions:
+          type: array 
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/JobPosition'
         PrivacySettings:
           $ref: '#/components/schemas/ProfilePrivacySettings'
 
