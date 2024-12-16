@@ -218,9 +218,12 @@ components:
           format: binary
           maxLength: 2097152
         Tags:
-          type: string
-          maxLength: 300
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            maxLength: 50
+            pattern: "^([[:print:]])*$"
       required:
         - ProfileID
         - IsStartup
@@ -383,9 +386,12 @@ components:
           format: date
           maxLength: 64
         Tags:
-          type: string
-          maxLength: 300
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            maxLength: 50
+            pattern: "^([[:print:]])*$"
       required:
         - ProfileOwner
         - CompanyName
@@ -431,9 +437,12 @@ components:
           minimum: 0
           maximum: 2147483647
         Tags:
-          type: string
-          maxLength: 300
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            maxLength: 50
+            pattern: "^([[:print:]])*$"
       required:
         - ProfileOwner
         - Name
@@ -464,9 +473,12 @@ components:
           format: date
           maxLength: 64
         Tags:
-          type: string
-          maxLength: 300
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            maxLength: 50
+            pattern: "^([[:print:]])*$"
       required:
         - ProfileOwner
         - Name
@@ -508,9 +520,12 @@ components:
           maxLength: 10000
           pattern: "^([[:print:]]|\r|\n)*$"
         Tags:
-          type: string
-          maxLength: 300
-          pattern: "^[A-Za-z0-9\\s&',.-]+$"
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            maxLength: 50
+            pattern: "^([[:print:]])*$"
       required:
         - ProfileOwner
         - JobTitle
