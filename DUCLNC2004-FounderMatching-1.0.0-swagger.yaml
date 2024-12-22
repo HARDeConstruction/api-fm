@@ -2053,3 +2053,170 @@ paths:
                     example: "An unexpected error occurred"
                     maxLength: 255
                     pattern: "^([[:print:]])*$"
+
+  /countView/:
+   post:
+      tags:
+        - Discover
+      summary: Count a view when someone presses "See more" on a profile.
+      description: Count a view when someone presses "See more" on a profile.
+      operationId: countView
+      parameters:
+        - name: fromID
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+        - name: toID
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+      responses:
+        '200':
+          description: View count updated
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  message:
+                    type: string
+                    example: "View count updated"
+                    maxLength: 255
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 255
+                    pattern: "^[a-zA-Z0-9 _.,:;!'?()-]*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile not found"
+                    maxLength: 255
+                    pattern: "^[a-zA-Z0-9 _.,:;!'?()-]*$"
+        'default':
+          description: Unexpected error occurred
+          content:
+              application/json:
+                schema:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    error:
+                      type: string
+                      example: "An unexpected error occurred"
+                      maxLength: 255
+                      pattern: "^[a-zA-Z0-9 _.,:;!'?()-]*$"
+  /getViewed/:
+    get: 
+      tags:
+        - Revisit
+      summary: Get the list of profiles who visited the given profile ID
+      description: Get the list of profiles who visited the given profile ID.
+      operationId: getViewed
+      parameters:
+        - name: profileID
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 1048576
+            example: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 20
+            example: 10
+      responses:
+        '200':
+          description: List of viewed profiles retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResult"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        maxItems: 20
+                        items:
+                          $ref: "#/components/schemas/ProfilePreviewCard"
+        '401': 
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized access: Not logged-in or invalid token."
+                    maxLength: 255
+                    pattern: "^[a-zA-Z0-9 _.,:;!'?()-]*$"
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error:
+                    type: string
+                    example: "Profile not found"
+                    maxLength: 255
+                    pattern: "^[a-zA-Z0-9 _.,:;!'?()-]*$"
+        'default':
+         description: Unexpected error occurred
+         content:
+           application/json:
+             schema:
+               type: object
+               additionalProperties: false
+               properties:
+                 error:
+                   type: string
+                   example: "An unexpected error occurred"
+                   maxLength: 255
+                   pattern: "^[a-zA-Z0-9 _.,:;!'?()-]*$"
