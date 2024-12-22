@@ -1319,6 +1319,24 @@ paths:
             minimum: 0
             maximum: 2147483647
             example: 11
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 1048576
+            example: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 20
+            example: 10
       responses:
         '200':
           description: List of saved profiles
@@ -1484,6 +1502,24 @@ paths:
             minimum: 0
             maximum: 2147483647
             example: 11
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 1048576
+            example: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 20
+            example: 10
       responses:
         '200':
           description: List of skipped profiles
@@ -1636,6 +1672,24 @@ paths:
             minimum: 0
             maximum: 2147483647
             example: 11
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 1048576
+            example: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 20
+            example: 10
       responses:
         '200':
           description: List of connected profiles
@@ -1696,8 +1750,35 @@ paths:
       tags:
         - Startup memberships
       summary: List of member in a startup
-      description: List of startup memberships in a startup, as a paginated result.
+      description: List of startup members in a startup, as a paginated result.
       operationId: getStartupMembership
+      parameters:
+        - name: startup_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 2147483647
+            example: 11
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 1048576
+            example: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 20
       responses:
         '200':
           description: List of startup memberships
@@ -2168,7 +2249,7 @@ paths:
             example: 10
       responses:
         '200':
-          description: List of viewed profiles retrieved
+          description: List of viewed profiles retrieved as a paginated result.
           content:
             application/json:
               schema:
