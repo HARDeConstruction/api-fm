@@ -3,7 +3,7 @@ profile_preview_card:
     name: str
     occupation: str 
     avatar: int (avatar_id) 
-    profile_id: int
+    profileId: int
 
 /dashboard (same for both candidate and startup)
     // get
@@ -21,8 +21,8 @@ profile_preview_card:
         - count viewed: scroll down through profile 
             + when clicked "more" -> count as a view 
         - create table view
-            + profile_id_from
-            + profile_id_to 
+            + profileId_from
+            + profileId_to 
             + timestamp 
 
 /discover
@@ -122,25 +122,25 @@ profile_preview_card:
 
 
 /count_view (post)
-    from_profile_id: int
-    to_profile_id: int
+    from_profileId: int
+    to_profileId: int
     timestamp: DateTime
 
 /upload_avatar (post)
 
 /connect (post)
-    from_profile_id: int
-    to_profile_id: int
+    from_profileId: int
+    to_profileId: int
     timestamp: DateTime
 
 /save (post)
-    from_profile_id: int
-    to_profile_id: int
+    from_profileId: int
+    to_profileId: int
     timestamp: DateTime
 
 /view (post)
-    from_profile_id: int
-    to_profile_id: int
+    from_profileId: int
+    to_profileId: int
     timestamp: DateTime
 
 /discover/candidate

@@ -1307,10 +1307,10 @@ paths:
       tags:
         - Saves
       summary: List of saved profiles
-      description: List of profile_id's saved profiles, returned as a list of profile preview cards as a paginated result.
+      description: List of profileId's saved profiles, returned as a list of profile preview cards as a paginated result.
       operationId: getSaved
       parameters:
-        - name: profile_id
+        - name: profileId
           in: query
           required: true
           schema:
@@ -1490,10 +1490,10 @@ paths:
       tags:
         - Connections
       summary: List of skipped profiles
-      description: List of profile_id's skipped profiles, returned as a list of profile preview cards as a paginated result.
+      description: List of profileId's skipped profiles, returned as a list of profile preview cards as a paginated result.
       operationId: getSkipped
       parameters:
-        - name: profile_id
+        - name: profileId
           in: query
           required: true
           schema:
@@ -1583,7 +1583,7 @@ paths:
       description: List of profiles suggested to connect to from the specified profile ID.
       operationId: discover
       parameters:
-        - name: profile_id
+        - name: profileId
           in: query
           required: true
           schema:
@@ -1660,10 +1660,10 @@ paths:
       tags:
         - Connections
       summary: List of connected profiles
-      description: List of profile_id's connected profiles, returned as a list of profile preview cards as a paginated result.
+      description: List of profileId's connected profiles, returned as a list of profile preview cards as a paginated result.
       operationId: getConnections
       parameters:
-        - name: profile_id
+        - name: profileId
           in: query
           required: true
           schema:
